@@ -18,7 +18,7 @@ script:
     source build/envsetup.sh
     # Choose build flavor as "eng" or "userdebug"
     BUILD_FLAVOR="eng"
-    lunch omni_$$DEVICE$$-${BUILD_FLAVOR}
+    lunch omni_$$Tecno_ID5A$$-${BUILD_FLAVOR}
     make -j$(nproc --all) recoveryimage
     exit
     EOF
