@@ -13,9 +13,13 @@ script:
   - git clone https://github.com/TwrpBuilder/android_device_generic_twrpbuilder.git device/generic/twrpbuilder
   - git clone https://github.com/omnirom/android_bootable_recovery.git bootable/recovery --depth=1
   - |
-    docker run --rm -i -v "$(pwd):/root/twrp/:rw,z" surendrajat/twrp-builder bash << EOF
-    cd /root/twrp/
-    source build/envsetup.sh && lunch omni_h398-eng && make -j16 recoveryimage
+    docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/builder/twrp/:rw,z" -v "${HOME}/.ccache:/srv/ccache:rw,z" fr3akyphantom/droid-builder bash << EOF
+    cd /home/builder/twrp/
+    source build/envsetup.sh
+    # Choose build flavor as "eng" or "userdebug"
+    BUILD_FLAVOR="eng"
+    lunch omni_$$DEVICE$$-${BUILD_FLAVOR}
+    make -j$(nproc --all) recoveryimage
     exit
     EOF
 after_success:
