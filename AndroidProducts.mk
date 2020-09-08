@@ -1,0 +1,3 @@
+LOCAL_PATH := device/$$BRAND$$/$$DEVICE$$
+
+PRODUCT_MAKEFILES := $(LOCAL_PATH)/omni_$$TECNO-ID5a$$.mk
