@@ -1,6 +1,6 @@
-os: linux
+nbos: linux
 dist: bionic
-language: generic
+language: en
 sudo: required
 git:
   depth: 1
