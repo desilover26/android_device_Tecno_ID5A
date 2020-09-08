@@ -1,53 +1,37 @@
-nbos: linux
-dist: bionic
-language: generic
 sudo: required
-git:
-  depth: 1
-addons:
-  apt:
-    update:
-      - true
 services:
   - docker
 before_install:
-  - docker pull fr3akyphantom/droid-builder:latest
+  - docker pull surendrajat/twrp-builder:latest
 before_script:
   - cd $HOME && mkdir twrp
+  - wget -q git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-8.1
+    -O $HOME/twrp.tar.xz
+  - tar -xJf twrp.tar.xz --directory $HOME/twrp/ && rm twrp.tar.xz
 script:
-  # Replace your $$USERNAME$$, $$REPO_URL$$, $$BRAND$$, $$DEVICE$$
-  - cd $HOME/twrp/ && git clone https://github.com/$$desilover26$$/$$android_device_Tecno_ID5A$$.git device/$$TECNO$$/$$TECNO ID5a$$
-  - rm -rf bootable/recovery && git clone https://github.com/omnirom/android_bootable_recovery -b android-8.1 --depth 1 bootable/recovery
+  - cd $HOME/twrp/ && git clone https://github.com/desilover26/android_device_Tecno_ID5A.git device/TECNO/Tecno_ID5A
+  - git clone https://github.com/TwrpBuilder/android_device_generic_twrpbuilder.git device/generic/twrpbuilder
+  - git clone https://github.com/omnirom/android_bootable_recovery.git bootable/recovery --depth=1
   - |
-    docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/builder/twrp/:rw,z" -v "${HOME}/.ccache:/srv/ccache:rw,z" fr3akyphantom/droid-builder bash << EOF
-    cd /home/builder/twrp/
-    source build/envsetup.sh
-    # Choose build flavor as "eng" or "userdebug"
-    BUILD_FLAVOR="eng"
-    lunch omni_$$DEVICE$$-${BUILD_FLAVOR}
-    make -j$(nproc --all) recoveryimage
+    docker run --rm -i -v "$(pwd):/root/twrp/:rw,z" surendrajat/twrp-builder bash << EOF
+    cd /root/twrp/
+    source build/envsetup.sh && lunch omni_h398-eng && make -j16 recoveryimage
     exit
     EOF
 after_success:
   - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
-  - cp $HOME/twrp/out/target/product/$$DEVICE$$/recovery.img $HOME/twrp/TWRP-$version-$$DEVICE$$-$(date +"%Y%m%d")-Unofficial.img
-  - cd $HOME/twrp/
-  # Optional: You might need to switch from https://transfer.sh to https://file.io
-  # - curl -s --upload-file TWRP-$version-$$DEVICE$$-$(date +"%Y%m%d")-Unofficial.img https://transfer.sh/ && echo ""
+  - cp $HOME/twrp/out/target/product/h398/recovery.img $HOME/twrp/TWRP-$version-h398-$(date +"%Y%m%d").img
+
 deploy:
   skip_cleanup: true
   provider: releases
-  # The secret api_key will be loaded from the environment variables
-  api_key: $GitOAUTHToken
+  api_key: "$GIT_OAUTH_TOKEN_TB"
   file_glob: true
   file: $HOME/twrp/*.img
   on:
     tags: false
-    repo: $$USERNAME$$/$$REPO_URL$$ # Optional: If you want to deploy on different repository
-    branch: master # Optional: Needs to be exact as the config branch
+    repo: TwrpBuilder/android_device_infinix_h398
+    branch: master
 branches:
-  only:
-    - master # Set travis builder branch(es) names
   except:
     - /^(?i:untagged)-.*$/
-    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
