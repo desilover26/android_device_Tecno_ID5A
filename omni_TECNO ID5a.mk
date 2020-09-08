@@ -15,11 +15,11 @@ PRODUCT_COPY_FILES += device/$$TECNO$$/$$TECNO ID5a$$/prebuilt/zImage:kernel
 # Fles under $(LOCAL_PATH)/recovery/root/ gets automatically copied into recovery
 # PRODUCT_COPY_FILES += $(LOCAL_PATH)/recovery/root/*:root/*
 
-PRODUCT_DEVICE := $$TECNO ID5a$$
-PRODUCT_NAME := omni_$$H612$
-PRODUCT_BRAND := $$TECNO$$
-PRODUCT_MODEL := $$TECNO ID5a$$
-PRODUCT_MANUFACTURER := $$TECNO$$
+PRODUCT_DEVICE := TECNO ID5a
+PRODUCT_NAME := omni_H612
+PRODUCT_BRAND := TECNO
+PRODUCT_MODEL := TECNO ID5a
+PRODUCT_MANUFACTURER := TECNO
 
 # Forcefully add mtp support (adb is already there)
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
