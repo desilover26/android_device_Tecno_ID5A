@@ -14,7 +14,7 @@ before_install:
   - docker pull fr3akyphantom/droid-builder:latest
 before_script:
   - cd $HOME && mkdir twrp
-  - TWRP_SOURCE="https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.3.1-20200222/MinimalOmniRecovery-twrp-7.1-norepo-20200222.tar.xz"
+  - TWRP_SOURCE="https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.4.0-20200708/MinimalOmniRecovery-twrp-8.1-norepo-20200708.tar.xz.aa"
   - wget -q ${TWRP_SOURCE} -O $HOME/twrp.tar.xz
   - tar -xJf twrp.tar.xz --directory $HOME/twrp/ && rm twrp.tar.xz
 script:
@@ -27,13 +27,13 @@ script:
     source build/envsetup.sh
     # Choose build flavor as "eng" or "userdebug"
     BUILD_FLAVOR="eng"
-    lunch omni_$$DEVICE$$-${BUILD_FLAVOR}
+    lunch omni_$$Tecno_ID5A$$-${BUILD_FLAVOR}
     make -j$(nproc --all) recoveryimage
     exit
     EOF
 after_success:
   - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
-  - cp $HOME/twrp/out/target/product/$$DEVICE$$/recovery.img $HOME/twrp/TWRP-$version-$$DEVICE$$-$(date +"%Y%m%d")-Unofficial.img
+  - cp $HOME/twrp/out/target/product/$$Tecno_ID5A$$/recovery.img $HOME/twrp/TWRP-$version-$$Tecno_ID5A$$-$(date +"%Y%m%d")-Unofficial.img
   - cd $HOME/twrp/
   # Optional: You might need to switch from https://transfer.sh to https://file.io
   # - curl -s --upload-file TWRP-$version-$$DEVICE$$-$(date +"%Y%m%d")-Unofficial.img https://transfer.sh/ && echo ""
